@@ -11,5 +11,7 @@ Locales['en'] = {
   ['no_veh_nearby']     = 'There is no vehicle nearby.',
   ['deposit']           = 'Deposit',
   ['nacho_veh']         = 'This is not your vehicle.',
+  ['trunk_contents']    = 'Trunk contents',
+  ['quantity']           = 'Quantity',
   
 }
