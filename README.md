@@ -17,3 +17,5 @@ TO PROTECT AGAINST RETURN KEYSPAM DUPLICATION EXPLOIT
 
 To configure:
 The config file is well commented.  You will use it to set default vehicle capacities, vechiletype specific capacities, general and specific item weights.  This will allow you tell the script that a 50 cal sniper rifle weighs more than a bottle of water.
+
+There is no release topic for this in the FiveM forum.  For support, either open an issue on the GitHub page or use my Discord: https://discord.gg/RZbv47G
