@@ -22,6 +22,7 @@ local arrayWeight 				= Config.localWeight
 local CloseToVehicle			= false
 local entityWorld 				= nil
 local globalplate 				= nil
+local lastChecked					= 0
 
 function getItemyWeight(item)
   local weight = 0
@@ -47,12 +48,14 @@ end)
 RegisterNetEvent('esx:playerLoaded')
 AddEventHandler('esx:playerLoaded', function(xPlayer)
   	PlayerData = xPlayer
-    TriggerServerEvent("esx_trunk_inventory:getOwnedVehicule")
+		TriggerServerEvent("esx_trunk_inventory:getOwnedVehicule")
+		lastChecked = GetGameTimer()
 end)
 
 AddEventHandler('onResourceStart', function()
   PlayerData = xPlayer
-  TriggerServerEvent("esx_trunk_inventory:getOwnedVehicule")
+	TriggerServerEvent("esx_trunk_inventory:getOwnedVehicule")
+	lastChecked = GetGameTimer()
 end)
 
 RegisterNetEvent('esx:setJob')
@@ -139,8 +142,9 @@ Citizen.CreateThread(function()
     Wait(0)
     if IsControlPressed(0, Keys["-"]) and (GetGameTimer() - GUI.Time) > 1000 then
 		if count == 0 then
-			local myVeh = 0
+			myVeh = 0
 			local thisVeh = VehicleInFront()
+			PlayerData = ESX.GetPlayerData()
 			for i=1, #vehiclePlate do
 				local vPlate = all_trim(vehiclePlate[i].plate)
 				local vFront = all_trim(GetVehicleNumberPlateText(thisVeh))
@@ -149,15 +153,28 @@ Citizen.CreateThread(function()
 				--if vehiclePlate[i].plate == GetVehicleNumberPlateText(vehFront) then
 				if  vPlate == vFront then
 					myVeh = 1
+				elseif lastChecked < GetGameTimer() - 60000 then
+					TriggerServerEvent("esx_trunk_inventory:getOwnedVehicule")
+					lastChecked = GetGameTimer()
+					Wait(2000)
+					for i=1, #vehiclePlate do
+						local vPlate = all_trim(vehiclePlate[i].plate)
+						local vFront = all_trim(GetVehicleNumberPlateText(thisVeh))
+						if  vPlate == vFront then
+							myVeh = 1
+						end
+					end
 				end
 			end
-			if myVeh == 1 then
-				openmenuvehicle()
-				count = count +1
-				DisableControlAction(0, Keys['TAB'], true)
-			else
-				-- Not their vehicle
-				ESX.ShowNotification(_U('nacho_veh'))
+			if Config.CheckOwnership then
+				if myVeh == 1 or (Config.AllowPolice and PlayerData.job.name == 'police') then
+					openmenuvehicle()
+					count = count +1
+					DisableControlAction(0, Keys['TAB'], true)
+				else
+					-- Not their vehicle
+					ESX.ShowNotification(_U('nacho_veh'))
+				end
 			end
 		else
 			Wait(2000)
