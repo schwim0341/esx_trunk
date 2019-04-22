@@ -16,4 +16,3 @@ MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `trunk_inventory` ADD UNIQUE( `item`, `plate`);
 
-ALTER TABLE `trunk_inventory` ADD itemt varchar(50) after name;
