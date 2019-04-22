@@ -480,5 +480,9 @@ function dump(o)
 end
 
 function all_trim(s)
-  return s:match"^%s*(.*)":match"(.-)%s*$"
+	if s then
+		return s:match"^%s*(.*)":match"(.-)%s*$"
+	else
+		return 'noTagProvided'
+	end
 end
