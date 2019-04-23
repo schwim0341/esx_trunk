@@ -7,15 +7,17 @@ version '1.0.3'
 server_scripts {
   '@async/async.lua',
   '@mysql-async/lib/MySQL.lua',
-	'@es_extended/locale.lua',
-	'locales/en.lua',
+  '@es_extended/locale.lua',
+  'locales/en.lua',
+  'locales/de.lua',
   'config.lua',
   'esx_trunk-sv.lua'
 }
 
 client_scripts {
-	'@es_extended/locale.lua',
-	'locales/en.lua',
+  '@es_extended/locale.lua',
+  'locales/en.lua',
+  'locales/de.lua',
   'config.lua',
   'esx_trunk-cl.lua'
 }
