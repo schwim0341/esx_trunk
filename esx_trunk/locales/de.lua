@@ -11,12 +11,10 @@ Locales['de'] = {
     ['nacho_veh']         = 'Dieses Fahrzeug gehört dir nicht!',
     ['trunk_contents']    = 'Kofferrauminhalt',
     ['quantity']           = 'Menge',
-    
-    
-    ['invalid_amount']        = '~r~Invalid amount',
-    ['insufficient_space']    = '~r~Insufficient space',
-    ['dirty_money']           = 'Dirty money $',
-    ['measurement']           = ' lb',
-    ['return']                = 'return',
+    ['invalid_amount']        = '~r~ungültige Menge',
+    ['insufficient_space']    = '~rNicht genug Platz',
+    ['dirty_money']           = 'Schwarzgeld',
+    ['measurement']           = ' kg',
+    ['return']                = 'Zurück',
     
   }
