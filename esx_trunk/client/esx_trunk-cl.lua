@@ -205,25 +205,25 @@ function OpenCoffreInventoryMenu(plate,max)
     local owner= GetPlayerPed(-1)
     local elements = {}
     table.insert(elements, {label = _U('deposit'), type = 'deposer', value = 'deposer'})
-    table.insert(elements, {label = _U('dirty_money') .. inventory.blackMoney, type = 'item_account', value = 'black_money'})
+    table.insert(elements, {label = _U('dirty_money') .. '<span style="color:red;">' .. inventory.blackMoney.. '$</span>', type = 'item_account', value = 'black_money'})
 
     for i=1, #inventory.items, 1 do
       local item = inventory.items[i]
       if item.count > 0 then
-        table.insert(elements, {label = item.label .. ' x' .. item.count..' - ('.. ((getItemyWeight(item.name)*item.count)/1000) ..' '.._U('measurement')..')', type = 'item_standard', value = item.name})
+        table.insert(elements, {label = item.label .. '<span style="text-align:center;color:green;">x' .. item.count .. '</span>' .. ((getItemyWeight(item.name)*item.count)/1000) .. _U('measurement'), type = 'item_standard', value = item.name})
       end
 
     end
 
     for i=1, #inventory.weapons, 1 do
       local weapon = inventory.weapons[i]
-      table.insert(elements, {label = ESX.GetWeaponLabel(weapon.name) .. ' [' .. weapon.ammo .. '] - ('..(getItemyWeight(weapon.name)/1000)..' '.._U('measurement')..')', type = 'item_weapon', value = weapon.name, ammo = weapon.ammo})
+      table.insert(elements, {label = ESX.GetWeaponLabel(weapon.name) .. '<span style="text-align:center;color:green;">x' .. weapon.ammo .. '</span>' .. (getItemyWeight(weapon.name)/1000) .. _U('measurement'), type = 'item_weapon', value = weapon.name, ammo = weapon.ammo})
     end
 
     ESX.UI.Menu.Open(
       'default', GetCurrentResourceName(), 'car_inventory',
       {
-        title    = plate .. ' - ' .. (inventory.weight/1000) .. " / "..(max/1000).._U('measurement'),
+        title    = plate .. ' - ' .. (inventory.weight/1000) .. "/"..(max/1000).._U('measurement'),
         align    = 'top-left',
         elements = elements,
       },
@@ -293,14 +293,14 @@ function OpenPlayerInventoryMenu(owner,plate,max,weight)
 
     local elements = {}
     table.insert(elements, {label = _U('return'), type = 'retour', value = 'retour'})
-    table.insert(elements, {label = _U('dirty_money') .. inventory.blackMoney, type = 'item_account', value = 'black_money'})
+    table.insert(elements, {label = _U('dirty_money') .. '<span style="color:red;">' .. inventory.blackMoney.. '$</span>', type = 'item_account', value = 'black_money'})
 
     for i=1, #inventory.items, 1 do
 
       local item = inventory.items[i]
 
       if item.count > 0 then
-        table.insert(elements, {label = item.label .. ' x' .. item.count..' - ('.. ((getItemyWeight(item.name)*item.count)/1000) ..' '.._U('measurement')..')', type = 'item_standard', value = item.name})
+        table.insert(elements, {label = item.label .. '<span style="text-align:center;color:green;">x' .. item.count .. '</span>' .. ((getItemyWeight(item.name)*item.count)/1000) .. _U('measurement'), type = 'item_standard', value = item.name})
       end
 
     end
@@ -314,7 +314,7 @@ function OpenPlayerInventoryMenu(owner,plate,max,weight)
 
       if HasPedGotWeapon(playerPed,  weaponHash,  false) and weaponList[i].name ~= 'WEAPON_UNARMED' then
         local ammo = GetAmmoInPedWeapon(playerPed, weaponHash)
-        table.insert(elements, {label = weaponList[i].label .. ' [' .. ammo .. '] - ('..(getItemyWeight(weaponList[i].name)/1000)..' '.._U('measurement')..')', type = 'item_weapon', value = weaponList[i].name, ammo = ammo})
+         table.insert(elements, {label = weaponList[i].label .. '<span style="text-align:center;color:green;">x' .. ammo .. '</span>' .. (getItemyWeight(weaponList[i].name)/1000) .. _U('measurement'), type = 'item_weapon', value = weaponList[i].name, ammo = ammo})
       end
 
     end
@@ -322,7 +322,7 @@ function OpenPlayerInventoryMenu(owner,plate,max,weight)
     ESX.UI.Menu.Open(
       'default', GetCurrentResourceName(), 'player_inventory',
       {
-        title    = plate .. ' - ' .. (weight/1000) .. " / "..(max/1000)..' '.._U('measurement'), 
+        title    = plate .. ' - ' .. (weight/1000) .. "/"..(max/1000)..' '.._U('measurement'), 
         align    = 'top-left',
         elements = elements,
       },
