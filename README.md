@@ -4,7 +4,7 @@ Modified and improved trunk storage system for ESX
 This trunk system is built off of SuperDaniel's forked release.  All credits, accolades, adolation and handjobs go to him.
 https://github.com/gregos1810/esx_truck/blob/master/client/main.lua
 
-This release includes quite a few changes.  First, it utilizes the locale system.  Second, if you activate it in config, it won't allow you to to use trunks that aren't yours(or if you're police).  When combined with the altered esx_menu_dialog, I'm pretty confident it resolves all of the duplication bugs found in current trunk systems.
+This release includes quite a few changes.  First, it utilizes the locale system.  Second, if you activate it in config, it won't allow you to to use trunks that aren't yours(or if you're police).  When combined with the altered esx_menu_dialog, I'm pretty confident it resolves all of the duplication bugs found in current trunk systems.  It allows for either vehicle class or vehicle model-based capacities.
 
 To install:
 
