@@ -52,7 +52,7 @@ end)
 RegisterNetEvent('esx_trunk_inventory:setOwnedVehicule')
 AddEventHandler('esx_trunk_inventory:setOwnedVehicule', function(vehicle)
 		vehiclePlate = vehicle
-		print('vehiclePlate: ',ESX.DumpTable(vehiclePlate))
+		print('Your vehiclePlates: ',ESX.DumpTable(vehiclePlate))
 end)
 
 function getItemyWeight(item)
@@ -87,32 +87,32 @@ function openmenuvehicle()
   for i=1, #vehiclePlate do
     local vPlate = all_trim(vehiclePlate[i].plate)
     local vFront = all_trim(GetVehicleNumberPlateText(thisVeh))
-    --print('vPlate: ',vPlate)
-    --print('vFront: ',vFront)
-    --if vehiclePlate[i].plate == GetVehicleNumberPlateText(vehFront) then
+    print('vPlate: ',vPlate)
+    print('vFront: ',vFront)
+    if vPlate ~= vFront then
+      print('No match: ' .. vPlate .. ' / '.. vFront)
+    end
     if  vPlate == vFront then
       myVeh = true
+      print('Plate match: ' .. vPlate .. ' / '.. vFront)
     elseif lastChecked < GetGameTimer() - 60000 then
       TriggerServerEvent("esx_trunk_inventory:getOwnedVehicule")
+      print('Checking for new plates(timed event)')
       lastChecked = GetGameTimer()
       Wait(2000)
       for i=1, #vehiclePlate do
         local vPlate = all_trim(vehiclePlate[i].plate)
         local vFront = all_trim(GetVehicleNumberPlateText(thisVeh))
+        if vPlate ~= vFront then
+          print('2nd attempt no match: ' .. vPlate .. ' / '.. vFront)
+        end
         if  vPlate == vFront then
           myVeh = true
+          print('Plate match: ' .. vPlate .. ' / '.. vFront)
         end
       end
     end
   end
-
-
-
-
-
-
-
-
 
   if not Config.CheckOwnership or (Config.AllowPolice and PlayerData.job.name == 'police') or (Config.CheckOwnership and myVeh) then  
     if globalplate ~= nil or globalplate ~= "" or globalplate ~= " " then
@@ -133,20 +133,31 @@ function openmenuvehicle()
         else
 
           if locked == 1 or class == 15 or class == 16 or class == 14 then
+            print('Trunk locked or improper class.')
             SetVehicleDoorOpen(vehFront, 5, false, false)
             ESX.UI.Menu.CloseAll()
 
             if globalplate ~= nil or globalplate ~= "" or globalplate ~= " " then
               CloseToVehicle = true
-              OpenCoffreInventoryMenu(GetVehicleNumberPlateText(vehFront),Config.VehicleLimit[class])
+              if inArray(model, Config.VehicleModel) then
+                model = string.lower(model)
+                vehCapacity = Config.VehicleModel[model]
+                --ESX.ShowNotification('weight is '..vehCapacity)
+              else
+                vehCapacity = Config.VehicleLimit[class]
+                --ESX.ShowNotification('weight is '..vehCapacity)
+              end
+              OpenCoffreInventoryMenu(GetVehicleNumberPlateText(vehFront), vehCapacity)
             end
 
           else
             ESX.ShowNotification(_U('trunk_closed'))
+            print('Trunk has been closed.')
           end
         end
       else
         ESX.ShowNotification(_U('no_veh_nearby'))
+        print('Trunk: No vehicle nearby.')
       end
       lastOpen = true
       GUI.Time  = GetGameTimer()
@@ -154,6 +165,9 @@ function openmenuvehicle()
   else
     -- Not their vehicle
     ESX.ShowNotification(_U('nacho_veh'))
+    print('Trunk: NOT YOUR VEHICLE')
+    print('Your Plates: ',ESX.DumpTable(vehiclePlate))
+    print('Veh in front: ',ESX.DumpTable(vehFront))
   end
 end
 local count = 0
@@ -205,25 +219,25 @@ function OpenCoffreInventoryMenu(plate,max)
     local owner= GetPlayerPed(-1)
     local elements = {}
     table.insert(elements, {label = _U('deposit'), type = 'deposer', value = 'deposer'})
-    table.insert(elements, {label = _U('dirty_money') .. '<span style="color:red;">' .. inventory.blackMoney.. '$</span>', type = 'item_account', value = 'black_money'})
+    table.insert(elements, {label = _U('dirty_money') .. inventory.blackMoney, type = 'item_account', value = 'black_money'})
 
     for i=1, #inventory.items, 1 do
       local item = inventory.items[i]
       if item.count > 0 then
-        table.insert(elements, {label = item.label .. '<span style="text-align:center;color:green;">x' .. item.count .. '</span>' .. ((getItemyWeight(item.name)*item.count)/1000) .. _U('measurement'), type = 'item_standard', value = item.name})
+        table.insert(elements, {label = item.label .. ' x' .. item.count..' - ('.. ((getItemyWeight(item.name)*item.count)/1000) ..' '.._U('measurement')..')', type = 'item_standard', value = item.name})
       end
 
     end
 
     for i=1, #inventory.weapons, 1 do
       local weapon = inventory.weapons[i]
-      table.insert(elements, {label = ESX.GetWeaponLabel(weapon.name) .. '<span style="text-align:center;color:green;">x' .. weapon.ammo .. '</span>' .. (getItemyWeight(weapon.name)/1000) .. _U('measurement'), type = 'item_weapon', value = weapon.name, ammo = weapon.ammo})
+      table.insert(elements, {label = ESX.GetWeaponLabel(weapon.name) .. ' [' .. weapon.ammo .. '] - ('..(getItemyWeight(weapon.name)/1000)..' '.._U('measurement')..')', type = 'item_weapon', value = weapon.name, ammo = weapon.ammo})
     end
 
     ESX.UI.Menu.Open(
       'default', GetCurrentResourceName(), 'car_inventory',
       {
-        title    = plate .. ' - ' .. (inventory.weight/1000) .. "/"..(max/1000).._U('measurement'),
+        title    = plate .. ' - ' .. (inventory.weight/1000) .. " / "..(max/1000).._U('measurement'),
         align    = 'top-left',
         elements = elements,
       },
@@ -293,14 +307,14 @@ function OpenPlayerInventoryMenu(owner,plate,max,weight)
 
     local elements = {}
     table.insert(elements, {label = _U('return'), type = 'retour', value = 'retour'})
-    table.insert(elements, {label = _U('dirty_money') .. '<span style="color:red;">' .. inventory.blackMoney.. '$</span>', type = 'item_account', value = 'black_money'})
+    table.insert(elements, {label = _U('dirty_money') .. inventory.blackMoney, type = 'item_account', value = 'black_money'})
 
     for i=1, #inventory.items, 1 do
 
       local item = inventory.items[i]
 
       if item.count > 0 then
-        table.insert(elements, {label = item.label .. '<span style="text-align:center;color:green;">x' .. item.count .. '</span>' .. ((getItemyWeight(item.name)*item.count)/1000) .. _U('measurement'), type = 'item_standard', value = item.name})
+        table.insert(elements, {label = item.label .. ' x' .. item.count..' - ('.. ((getItemyWeight(item.name)*item.count)/1000) ..' '.._U('measurement')..')', type = 'item_standard', value = item.name})
       end
 
     end
@@ -314,7 +328,7 @@ function OpenPlayerInventoryMenu(owner,plate,max,weight)
 
       if HasPedGotWeapon(playerPed,  weaponHash,  false) and weaponList[i].name ~= 'WEAPON_UNARMED' then
         local ammo = GetAmmoInPedWeapon(playerPed, weaponHash)
-         table.insert(elements, {label = weaponList[i].label .. '<span style="text-align:center;color:green;">x' .. ammo .. '</span>' .. (getItemyWeight(weaponList[i].name)/1000) .. _U('measurement'), type = 'item_weapon', value = weaponList[i].name, ammo = ammo})
+        table.insert(elements, {label = weaponList[i].label .. ' [' .. ammo .. '] - ('..(getItemyWeight(weaponList[i].name)/1000)..' '.._U('measurement')..')', type = 'item_weapon', value = weaponList[i].name, ammo = ammo})
       end
 
     end
@@ -322,7 +336,7 @@ function OpenPlayerInventoryMenu(owner,plate,max,weight)
     ESX.UI.Menu.Open(
       'default', GetCurrentResourceName(), 'player_inventory',
       {
-        title    = plate .. ' - ' .. (weight/1000) .. "/"..(max/1000)..' '.._U('measurement'), 
+        title    = plate .. ' - ' .. (weight/1000) .. " / "..(max/1000)..' '.._U('measurement'), 
         align    = 'top-left',
         elements = elements,
       },
@@ -403,4 +417,14 @@ function dump(o)
    else
       return tostring(o)
    end
+end
+
+
+function inArray(needle, haystack)
+	for k,v in pairs(haystack) do
+		if string.lower(k) == string.lower(needle) then
+			return true
+		end
+	end
+	return false
 end
