@@ -12,7 +12,7 @@ To install:
 2) Run esx_trunk.sql in your DB app to modify your database.
 3) Add "start esx_trunk" to your server.cfg.
 
-TO PROTECT AGAINST RETURN KEYSPAM DUPLICATION EXPLOIT
+TO PROTECT AGAINST RETURN KEYSPAM DUPLICATION EXPLOIT CREDITS TO @LENZH FOR THR HELP 
 4) You can either replace esx_menu_dialog with the version included in download or you can make the two commented changes in esx_menu_dialog/html/js/app.js.
 
 To configure:
