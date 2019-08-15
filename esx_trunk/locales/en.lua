@@ -19,6 +19,7 @@ Locales['en'] = {
   ['dirty_money']           = 'Dirty money $',
   ['measurement']           = ' lb',
   ['return']                = 'return',
+   ['player_cannot_hold']   = 'You can not hold anymore of this.',
 
 
 
