@@ -105,7 +105,7 @@ ESX.RegisterServerCallback('esx_trunk:getInventoryV',function(source,cb,plate)
 end)
 
 RegisterServerEvent('esx_trunk:getItem')
-AddEventHandler('esx_trunk:getItem', function(plate, type, item, count, itemName)
+AddEventHandler('esx_trunk:getItem', function(plate, type, item, count)
 
   local _source      = source
   local xPlayer      = ESX.GetPlayerFromId(_source)
