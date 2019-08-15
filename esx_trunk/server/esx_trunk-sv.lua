@@ -105,10 +105,11 @@ ESX.RegisterServerCallback('esx_trunk:getInventoryV',function(source,cb,plate)
 end)
 
 RegisterServerEvent('esx_trunk:getItem')
-AddEventHandler('esx_trunk:getItem', function(plate, type, item, count)
+AddEventHandler('esx_trunk:getItem', function(plate, type, item, count, itemName)
 
   local _source      = source
   local xPlayer      = ESX.GetPlayerFromId(_source)
+  local sourceItem = xPlayer.getInventoryItem(item)
 
   if type == 'item_standard' then
 
@@ -116,19 +117,22 @@ AddEventHandler('esx_trunk:getItem', function(plate, type, item, count)
       local coffre = (store.get('coffre') or {})
       for i=1, #coffre,1 do
         if coffre[i].name == item then
-          if (coffre[i].count >= count and count > 0) then
+          if (coffre[i].count >= count and count > 0) and sourceItem.limit ~= -1 and ((sourceItem.count + count) > sourceItem.limit)  then
+           
+               TriggerClientEvent('esx:showNotification', _source, _U('player_cannot_hold')) 
+            else
             xPlayer.addInventoryItem(item, count)
             if (coffre[i].count - count) == 0 then
               table.remove(coffre,i)
             else
               coffre[i].count = coffre[i].count - count
             end
+          end
             break
           else
             TriggerClientEvent('esx:showNotification', _source, _U('invalid_quantity'))
           end
         end
-      end
 
 
       store.set('coffre',coffre)
