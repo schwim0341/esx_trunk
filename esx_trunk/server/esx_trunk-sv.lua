@@ -117,11 +117,16 @@ AddEventHandler('esx_trunk:getItem', function(plate, type, item, count)
       for i=1, #coffre,1 do
         if coffre[i].name == item then
           if (coffre[i].count >= count and count > 0) then
-            xPlayer.addInventoryItem(item, count)
-            if (coffre[i].count - count) == 0 then
-              table.remove(coffre,i)
+            local xItem = xPlayer.getInventoryItem(item)
+            if xItem.limit ~= -1 and (xItem.count + count) > xItem.limit then
+              TriggerClientEvent('esx:showNotification', _source, _U('invalid_quantity'))
             else
-              coffre[i].count = coffre[i].count - count
+              xPlayer.addInventoryItem(item, count)
+              if (coffre[i].count - count) == 0 then
+                table.remove(coffre,i)
+              else
+                coffre[i].count = coffre[i].count - count
+              end
             end
             break
           else
