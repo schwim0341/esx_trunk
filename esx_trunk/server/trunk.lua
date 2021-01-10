@@ -76,7 +76,7 @@ function MakeDataStore(plate)
   local owned = getOwnedVehicule(plate)
   local dataStore   = CreateDataStore(plate, owned, data)
   SharedDataStores[plate] = dataStore
-  MySQL.Async.execute('INSERT INTO trunk_inventory(plate,data,owned) VALUES (@plate,\'{}\',@owned)',
+  MySQL.Async.execute('INSERT IGNORE INTO trunk_inventory(plate,data,owned) VALUES (@plate,\'{}\',@owned)',
   {
     ['@plate'] = plate,
     ['@owned'] = owned,
