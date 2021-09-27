@@ -293,7 +293,7 @@ AddEventHandler('esx_trunk:putItem', function(plate, type, item, count,max, owne
   end
 
   if type == 'item_weapon' then
-
+   if xPlayer.hasWeapon(item) then
     TriggerEvent('esx_trunk:getSharedDataStore', plate, function(store)
 
       local storeWeapons = store.get('weapons')
@@ -319,7 +319,7 @@ AddEventHandler('esx_trunk:putItem', function(plate, type, item, count,max, owne
         })
       end
     end)
-
+    end
   end
 
 end)
