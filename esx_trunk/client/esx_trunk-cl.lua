@@ -39,6 +39,8 @@ AddEventHandler('esx:playerLoaded', function(xPlayer)
 end)
 
 AddEventHandler('onResourceStart', function()
+	if (GetCurrentResourceName() ~= resourceName) then return end
+		
   PlayerData = xPlayer
 	TriggerServerEvent("esx_trunk_inventory:getOwnedVehicule")
 	lastChecked = GetGameTimer()
